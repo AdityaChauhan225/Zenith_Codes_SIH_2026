@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beacon Point Simulator</title>
+    <!-- Use CDNs for quick React setup without needing Node/NPM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-800 p-8 flex justify-center font-sans h-screen items-start mt-10">
+    <div id="root" class="w-full max-w-lg"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function BeaconSimulator() {
+            const [isOnline, setIsOnline] = useState(true);
+            const [isActive, setIsActive] = useState(false);
+            const [serverDB, setServerDB] = useState([]);
+            const [offlineCache, setOfflineCache] = useState([]);
+
+            // THE OFFLINE-FIRST MAGIC (Store & Forward)
+            useEffect(() => {
+                // If internet reconnects and we have data in the offline cache...
+                if (isOnline && offlineCache.length > 0) {
+                    // Sync the offline data to the server instantly
+                    setServerDB(prev => [...offlineCache, ...prev]);
+                    // Clear the local cache
+                    setOfflineCache([]);
+                }
+            }, [isOnline, offlineCache]);
+
+            const triggerBeacon = () => {
+                setIsActive(true);
+                
+                // Simulate getting GPS location
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const newLoc = { 
+                                lat: position.coords.latitude.toFixed(5), 
+                                lng: position.coords.longitude.toFixed(5), 
+                                time: new Date().toLocaleTimeString() 
+                            };
+                            
+                            // If Online -> Push straight to Server DB
+                            if (isOnline) {
+                                setServerDB(prev => [newLoc, ...prev]);
+                            } 
+                            // If Offline -> Store locally on device cache
+                            else {
+                                setOfflineCache(prev => [newLoc, ...prev]);
+                            }
+                            setIsActive(false);
+                        },
+                        (error) => {
+                            alert("Please allow location access to test the GPS!");
+                            setIsActive(false);
+                        }
+                    );
+                } else {
+                    alert("Geolocation is not supported by your browser");
+                    setIsActive(false);
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-2xl shadow-2xl p-6 flex flex-col gap-6 border-4 border-slate-700">
+                    <div className="text-center">
+                        <h1 className="text-2xl font-bold text-gray-800">Beacon Point Module</h1>
+                        <p className="text-gray-500 text-sm mt-1">Interactive Store & Forward Demo</p>
+                    </div>
+                    
+                    {/* Network Control Simulator */}
+                    <div className="flex items-center justify-between p-4 bg-slate-100 rounded-xl border-2 border-slate-200">
+                        <span className="font-semibold text-slate-700 flex flex-col">
+                            <span>Phone Network:</span>
+                            <span className="text-xs text-slate-500 font-normal">Click to simulate network crash</span>
+                        </span>
+                        <button 
+                            onClick={() => setIsOnline(!isOnline)}
+                            className={`px-5 py-3 rounded-xl font-bold text-white transition-all shadow-md active:scale-95 ${isOnline ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}`}
+                        >
+                            {isOnline ? "🌐 ONLINE" : "🚫 OFFLINE"}
+                        </button>
+                    </div>
+
+                    {/* SOS Button */}
+                    <button 
+                        onClick={triggerBeacon}
+                        disabled={isActive}
+                        className={`w-full py-5 rounded-xl font-bold text-white text-lg transition-all active:scale-95 shadow-lg ${isActive ? 'bg-orange-500 animate-pulse' : 'bg-red-600 hover:bg-red-700'}`}
+                    >
+                        {isActive ? "FETCHING GPS..." : "🚨 ACTIVATE BEACON (SOS)"}
+                    </button>
+
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                        {/* Offline Cache Box */}
+                        <div className="border-2 border-yellow-200 rounded-xl p-4 bg-yellow-50 relative overflow-hidden">
+                            {/* Syncing Overlay */}
+                            {isOnline && offlineCache.length > 0 && (
+                                <div className="absolute inset-0 bg-yellow-400/80 flex items-center justify-center font-bold text-yellow-900 z-10 backdrop-blur-sm">
+                                    SYNCING...
+                                </div>
+                            )}
+                            <h2 className="font-bold text-yellow-800 border-b-2 border-yellow-200 pb-2 mb-3 text-sm flex justify-between">
+                                <span>📱 Local Cache</span>
+                                <span>{offlineCache.length}</span>
+                            </h2>
+                            <div className="space-y-2 h-40 overflow-y-auto">
+                                {offlineCache.length === 0 ? (
+                                    <span className="text-xs text-yellow-600/70 italic text-center block mt-10">Empty</span>
+                                ) : (
+                                    offlineCache.map((loc, i) => (
+                                        <div key={i} className="text-xs bg-white p-2 rounded-lg text-yellow-900 border border-yellow-200 shadow-sm animate-fade-in">
+                                            📍 {loc.lat}, {loc.lng} <br/><span className="text-yellow-600 mt-1 block">{loc.time}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Server DB Box */}
+                        <div className="border-2 border-blue-200 rounded-xl p-4 bg-blue-50">
+                            <h2 className="font-bold text-blue-800 border-b-2 border-blue-200 pb-2 mb-3 text-sm flex justify-between">
+                                <span>☁️ NDRF Server</span>
+                                <span>{serverDB.length}</span>
+                            </h2>
+                            <div className="space-y-2 h-40 overflow-y-auto">
+                                {serverDB.length === 0 ? (
+                                    <span className="text-xs text-blue-600/70 italic text-center block mt-10">No alerts received</span>
+                                ) : (
+                                    serverDB.map((loc, i) => (
+                                        <div key={i} className="text-xs bg-white p-2 rounded-lg text-blue-900 border border-blue-200 shadow-sm transition-all">
+                                            📍 {loc.lat}, {loc.lng} <br/><span className="text-blue-600 mt-1 block">{loc.time}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<BeaconSimulator />);
+    </script>
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</body>
+</html>
