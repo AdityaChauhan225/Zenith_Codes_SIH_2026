@@ -1,0 +1,68 @@
+[
+  {
+    "id": "shelter-01",
+    "name": "Central Community Flood Relief Center",
+    "address": "Civic Center Complex, Main Highway",
+    "latitude": 28.6139,
+    "longitude": 77.2090,
+    "capacity": 500,
+    "available": 340,
+    "contact": "+1-800-555-0199",
+    "supplies": ["Medical First Aid", "Drinking Water", "Emergency Rations", "Power Generators"]
+  },
+  {
+    "id": "shelter-02",
+    "name": "High School Disaster Relief Shelter",
+    "address": "45 Education Avenue, North Zone",
+    "latitude": 28.6300,
+    "longitude": 77.2200,
+    "capacity": 350,
+    "available": 120,
+    "contact": "+1-800-555-0188",
+    "supplies": ["Bedding Kits", "Medical First Aid", "Food Packets"]
+  },
+  {
+    "id": "shelter-03",
+    "name": "Riverside Stadium Emergency Camp",
+    "address": "East River Bank Road, Gate 4",
+    "latitude": 28.5800,
+    "longitude": 77.2400,
+    "capacity": 1200,
+    "available": 850,
+    "contact": "+1-800-555-0177",
+    "supplies": ["Helipad Access", "Ambulance Station", "Clean Water Tanks", "Large Dorms"]
+  },
+  {
+    "id": "shelter-04",
+    "name": "Metro Stadium Flood Evacuation Hub",
+    "address": "77 Metro Boulevard, Central West",
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "capacity": 800,
+    "available": 450,
+    "contact": "+1-800-555-0122",
+    "supplies": ["Rescue Boats", "Emergency Medical Unit", "Food Supplies"]
+  },
+  {
+    "id": "shelter-05",
+    "name": "Valley High Relief & Shelter Base",
+    "address": "120 Valley Road, North Bay",
+    "latitude": 37.7833,
+    "longitude": -122.4167,
+    "capacity": 400,
+    "available": 210,
+    "contact": "+1-800-555-0133",
+    "supplies": ["Blankets", "Child Care Supplies", "Solar Chargers"]
+  },
+  {
+    "id": "shelter-06",
+    "name": "Global Disaster Response Shelter",
+    "address": "Universal Safety Zone, Sector 9",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "capacity": 600,
+    "available": 500,
+    "contact": "+1-800-555-0144",
+    "supplies": ["Water Purification", "Emergency Tents", "Radio Telecom"]
+  }
+]

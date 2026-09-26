@@ -1,0 +1,65 @@
+{
+  "test_partition": {
+    "num_samples": 1500,
+    "start_time": "2024-06-15 01:45:00",
+    "end_time": "2024-09-29 23:15:00"
+  },
+  "metrics": {
+    "accuracy": 0.894,
+    "macro_f1": 0.8127,
+    "weighted_f1": 0.898,
+    "cohen_kappa": 0.7503,
+    "per_tier": {
+      "low": {
+        "precision": 0.9701,
+        "recall": 0.9211,
+        "f1_score": 0.945,
+        "support": 1128
+      },
+      "medium": {
+        "precision": 0.6861,
+        "recall": 0.8217,
+        "f1_score": 0.7478,
+        "support": 258
+      },
+      "high": {
+        "precision": 0.6667,
+        "recall": 0.7937,
+        "f1_score": 0.7246,
+        "support": 63
+      },
+      "critical": {
+        "precision": 0.8889,
+        "recall": 0.7843,
+        "f1_score": 0.8333,
+        "support": 51
+      }
+    }
+  },
+  "confusion_matrix": [
+    [
+      1039,
+      89,
+      0,
+      0
+    ],
+    [
+      32,
+      212,
+      14,
+      0
+    ],
+    [
+      0,
+      8,
+      50,
+      5
+    ],
+    [
+      0,
+      0,
+      11,
+      40
+    ]
+  ]
+}

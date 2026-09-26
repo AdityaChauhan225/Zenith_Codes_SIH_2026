@@ -1,0 +1,14 @@
+{
+  "rainfall_1h_mm": 54.2,
+  "rainfall_3h_mm": 92.5,
+  "rainfall_6h_mm": 118.0,
+  "rainfall_24h_mm": 172.4,
+  "soil_saturation_index": 0.89,
+  "slope_degrees": 36.8,
+  "elevation_m": 1940.0,
+  "aspect": 210.5,
+  "historical_incident_density": 2.15,
+  "land_cover_class": "barren",
+  "distance_to_nearest_stream_m": 65.0,
+  "antecedent_moisture_condition": "wet"
+}

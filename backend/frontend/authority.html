@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authority Dashboard - Flood Emergency SOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for OpenStreetMap Visualization -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+<body class="authority-theme">
+
+  <header class="app-header authority-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="warning-icon">🛡️</span>
+        <div>
+          <h1>AUTHORITY MONITORING DASHBOARD</h1>
+          <p class="subtitle">Flood Disaster Real-Time Rescue Operations</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-number" id="activeAlertsCount">0</span>
+          <span class="stat-label">Active SOS Alerts</span>
+        </div>
+        <div id="socketConnectionBadge" class="status-pill offline">
+          <span class="dot"></span> <span id="socketConnText">Connecting...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+
+    <!-- Left Pane: Real-Time Incoming SOS Feed -->
+    <section class="feed-section">
+      <div class="section-header">
+        <h2>INCOMING SOS ALERTS</h2>
+        <span class="live-tag">LIVE FEED</span>
+      </div>
+      <div id="sosFeed" class="sos-feed-container">
+        <!-- Empty state placeholder -->
+        <div id="emptyFeedNotice" class="empty-feed">
+          <div class="empty-icon">📡</div>
+          <p>Listening for distress signals...</p>
+          <small>Incoming SOS alerts will appear here in real time.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Pane: Interactive Map & Shelter Matcher -->
+    <section class="map-shelter-section">
+      
+      <!-- Interactive Map Card -->
+      <div class="card map-card">
+        <div class="card-header">
+          <h3>📍 EMERGENCY LOCATION MAP</h3>
+          <span id="selectedSosLabel" class="selected-label">Select an alert to view location</span>
+        </div>
+        <div id="map" class="map-container"></div>
+      </div>
+
+      <!-- Nearby Shelters Panel -->
+      <div class="card shelter-card">
+        <div class="card-header">
+          <h3>⛺ NEARBY RELIEF SHELTERS</h3>
+          <small class="header-sub" id="shelterSub">Calculated from user GPS coordinates</small>
+        </div>
+        <div id="shelterList" class="shelter-list-container">
+          <p class="placeholder-text">Click on an SOS alert from the feed to compute nearest shelters.</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Leaflet JS CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Socket.IO Client CDN / Local Express route -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Dashboard JS Script -->
+  <script src="js/authority.js"></script>
+</body>
+</html>

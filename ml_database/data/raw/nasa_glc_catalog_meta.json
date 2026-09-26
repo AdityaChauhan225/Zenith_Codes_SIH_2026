@@ -1,0 +1,17 @@
+{
+  "dataset_name": "NASA Global Landslide Catalog (GLC)",
+  "source_url": "https://data.nasa.gov/Earth-Science/Global-Landslide-Catalog-Export/h666-g5m4",
+  "acquisition_timestamp": "2026-09-23T16:41:06.398639",
+  "attributes": [
+    "event_id",
+    "event_date",
+    "location_description",
+    "latitude",
+    "longitude",
+    "landslide_category",
+    "landslide_trigger",
+    "landslide_size",
+    "fatality_count"
+  ],
+  "himachal_pradesh_coverage_note": "Contains historical point locations for major highway landslides in HP (e.g. Kotropi 2017, Nigulsari 2021). Lacks dense hourly multi-class risk labels across all 11 study locations for 2020-2024."
+}

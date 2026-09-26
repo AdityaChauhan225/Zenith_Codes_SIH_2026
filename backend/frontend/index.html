@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flood Emergency SOS System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="emergency-theme">
+  
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="warning-icon">⚠️</span>
+        <div>
+          <h1>FLOOD EMERGENCY SOS</h1>
+          <p class="subtitle">Disaster Alert & Location System</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div id="networkBadge" class="status-pill online">
+          <span class="dot"></span> <span id="networkText">ONLINE</span>
+        </div>
+        <a href="authority.html" target="_blank" class="authority-link">Authority View ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="user-container">
+    
+    <!-- Main SOS Section -->
+    <section class="sos-card">
+      <div class="sos-instruction">
+        <h2>EMERGENCY DISTRESS BUTTON</h2>
+        <p>Press the button below to transmit your precise GPS coordinates to flood rescue authorities.</p>
+      </div>
+
+      <!-- Large Circular SOS Button -->
+      <div class="sos-button-wrapper">
+        <button id="sosBtn" class="sos-button" aria-label="Trigger Emergency SOS Alert">
+          <span class="sos-btn-text">SOS</span>
+          <span class="sos-btn-sub">PRESS FOR HELP</span>
+        </button>
+      </div>
+
+      <!-- Optional Emergency Note Selector -->
+      <div class="emergency-notes-box">
+        <label for="emergencyNotes">Emergency Situation (Optional):</label>
+        <select id="emergencyNotes" class="notes-select">
+          <option value="Flood Rescue Needed">Flood Rescue Needed (General)</option>
+          <option value="Trapped on Roof/Upper Floor">Trapped on Roof / Upper Floor</option>
+          <option value="Medical Assistance Required">Medical Emergency / Injury</option>
+          <option value="Elderly or Children Present">Elderly / Children / Infants Present</option>
+          <option value="Rapidly Rising Water Levels">Rapidly Rising Water Levels</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Real-time Status Box -->
+    <section class="status-card">
+      <h3>System Status Monitor</h3>
+      <div class="status-grid">
+        <div class="status-item">
+          <span class="status-label">Network Connection</span>
+          <span id="statusNetwork" class="status-val success">Online</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">GPS Geolocation</span>
+          <span id="statusLocation" class="status-val pending">Checking permission...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">SOS Transmission</span>
+          <span id="statusSOS" class="status-val neutral">Ready</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Offline Queue</span>
+          <span id="statusQueue" class="status-val neutral">0 Pending</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Confirmation Banner & Details -->
+    <section id="alertResultCard" class="result-card hidden">
+      <div id="resultBanner" class="result-banner success-bg">
+        <div class="result-icon" id="resultIcon">✓</div>
+        <div>
+          <h3 id="resultTitle">SOS SENT SUCCESSFULLY</h3>
+          <p id="resultSubtitle">Your alert has been transmitted to emergency response teams.</p>
+        </div>
+      </div>
+
+      <div class="result-details">
+        <div class="detail-row">
+          <span class="detail-key">Alert ID:</span>
+          <span class="detail-val" id="resAlertId">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Latitude:</span>
+          <span class="detail-val" id="resLat">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Longitude:</span>
+          <span class="detail-val" id="resLng">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">GPS Accuracy:</span>
+          <span class="detail-val" id="resAcc">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Timestamp:</span>
+          <span class="detail-val" id="resTime">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Emergency Details:</span>
+          <span class="detail-val" id="resInfo">-</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Error/Notice Modal banner -->
+    <div id="errorMessage" class="error-notice hidden"></div>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Flood Emergency Relief System • Simple College Project • Built for Rapid Disaster Response</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "sos-flood-emergency-backend",
+  "version": "1.0.0",
+  "description": "Backend server for Flood Emergency SOS Alert System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "sos",
+    "emergency",
+    "flood",
+    "socket.io",
+    "express"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

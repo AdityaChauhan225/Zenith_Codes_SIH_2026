@@ -1,0 +1,4 @@
+# TEST FIXTURE — NOT REAL HISTORICAL DATA
+source,source_record_id,event_id,hazard_type,event_date,event_timestamp,latitude,longitude,district,location_name,severity_original,warning_level_original,danger_level_original,water_level_m,discharge_cumecs,affected_population,fatalities,damage_amount,source_reference
+HPSDMA_TEST,EVT_2023_001,EVT_2023_001,flash_flood,2023-07-10,2023-07-10T14:30:00,32.2396,77.1887,Kullu,Manali,Severe,Severe,Exceeded,12.5,450.0,250,2,1500000,HPSDMA_LOG_2023_PG45
+HPSDMA_TEST,EVT_2023_002,EVT_2023_002,landslide,2023-08-15,2023-08-15T09:15:00,31.7087,76.9320,Mandi,Mandi Town,Extreme,Extreme,Danger,14.8,620.0,500,5,5000000,HPSDMA_LOG_2023_PG88

@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-09-20T08:24:15.395832",
+  "numeric_features": [
+    "rainfall_1h_mm",
+    "rainfall_3h_mm",
+    "rainfall_6h_mm",
+    "rainfall_24h_mm",
+    "soil_saturation_index",
+    "slope_degrees",
+    "elevation_m",
+    "aspect",
+    "historical_incident_density",
+    "distance_to_nearest_stream_m"
+  ],
+  "categorical_features": {
+    "land_cover_class": [
+      "forest",
+      "agriculture",
+      "barren",
+      "urban"
+    ],
+    "antecedent_moisture_condition": [
+      "dry",
+      "normal",
+      "wet"
+    ]
+  },
+  "transformed_feature_names": [
+    "rainfall_1h_mm",
+    "rainfall_3h_mm",
+    "rainfall_6h_mm",
+    "rainfall_24h_mm",
+    "soil_saturation_index",
+    "slope_degrees",
+    "elevation_m",
+    "aspect",
+    "historical_incident_density",
+    "distance_to_nearest_stream_m",
+    "land_cover_class_forest",
+    "land_cover_class_agriculture",
+    "land_cover_class_barren",
+    "land_cover_class_urban",
+    "antecedent_moisture_condition_dry",
+    "antecedent_moisture_condition_normal",
+    "antecedent_moisture_condition_wet"
+  ],
+  "risk_levels": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ],
+  "severity_weights": [
+    0.08,
+    0.38,
+    0.68,
+    0.94
+  ],
+  "train_samples": 4500,
+  "test_samples": 1500,
+  "test_macro_f1": 0.8127,
+  "test_accuracy": 0.894,
+  "best_hyperparameters": {
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "n_estimators": 150,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85
+  }
+}
