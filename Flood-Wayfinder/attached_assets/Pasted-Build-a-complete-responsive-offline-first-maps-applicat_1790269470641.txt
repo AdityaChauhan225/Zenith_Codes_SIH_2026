@@ -1,0 +1,229 @@
+Build a complete responsive offline-first maps application called "Wayfinder" — designed specifically for people navigating to safety during flood emergencies, without relying on internet connectivity.
+
+CORE IDEA:
+The app allows users to download maps (including routing and safety data) for a chosen radius around a location while they have internet access, then use those maps — including navigation to safe zones — completely offline once they lose connectivity.
+
+The experience should feel like a real, polished navigation product — NOT an AI-generated demo. It should feel warm and approachable day-to-day, but instantly clear and steady the moment it's needed in an emergency.
+
+DESIGN DIRECTION:
+- Warm, friendly, approachable — but still trustworthy, not cartoonish
+- Soft rounded corners, generous whitespace, breathing room
+- A cheerful primary palette: warm off-white/cream background, deep charcoal text, and a vibrant, optimistic accent color (e.g., coral, teal, or sunny amber) used for buttons, active states, and highlights
+- Friendly custom icon set — simple, rounded outline icons, not sharp/technical ones
+- Light, playful micro-animations for everyday actions: download progress, button taps, screen transitions (smooth, springy, not distracting)
+- Approachable illustration accents on empty states (e.g., a friendly illustrated compass or map pin for "no downloads yet") — tasteful, not childish
+- Typography: rounded/friendly sans-serif (e.g., Inter, Nunito, or similar), clear hierarchy, generously sized
+- Map remains the visual anchor, styled with a warm, inviting tile theme (soft greens/blues, not clinical grays)
+
+EXCEPTION — SAFETY-CRITICAL SCREENS STAY SERIOUS:
+- SOS button: always high-contrast (strong red/orange), no playful styling, instantly recognizable
+- Safe-zone markers and the "Offline — navigating to safety" state: bold, high-contrast, unambiguous — clarity over charm here
+- Turn-by-turn navigation view: large, legible, high-contrast text and arrows, minimal decoration, readable in bright sun or low light
+- Emergency contact list and SOS confirmation screens: calm but serious, no playful animation on these specific screens
+
+The rest of the app — search, downloads, saved places, onboarding — should feel warm and delightful, like a friendly local guide, not a sterile utility. The tone shift should be deliberate: inviting when things are normal, clear and steady the moment things aren't.
+
+MAIN SCREEN:
+Full-screen map interface.
+
+Top:
+- App name: "Wayfinder"
+- Search bar: "Search a place or city"
+- Location button
+
+Map:
+- Large interactive map, most of the screen
+- Clean blue current-location indicator
+- Zoom controls, compass
+- Subtle "Offline" indicator when no network
+- SAFE ZONES visible directly on the map around the user's current location — relief camps, shelters, hospitals, police stations, high-ground areas — shown as distinct high-contrast markers, always rendered even offline if data was downloaded
+
+Bottom:
+Minimal navigation bar:
+- "Explore"
+- "Downloads"
+- "Saved"
+- "SOS" (always visible, high-contrast, one-tap access)
+
+MAIN USER FLOW:
+
+1. CURRENT LOCATION
+- Ask for location permission, explaining why (for offline navigation to safety)
+- Detect and center on GPS location
+- GPS must keep working offline where the device supports it
+- Clearly distinguish "Location available" vs "Map unavailable"
+- If offline but the relevant area is downloaded: show position, allow full pan/zoom, and show nearby safe zones
+
+2. SEARCH FOR A LOCATION
+Search cities, towns, neighborhoods, addresses, landmarks.
+Example: user searches "Manali" → show "Manali, Himachal Pradesh" with a [Download map] option.
+
+3. DOWNLOAD OFFLINE MAP — RANGE SLIDER
+When a location is selected, let the user choose how much surrounding area to download using a SLIDER, not a draggable rectangle:
+- Minimum: 5 km radius
+- Maximum: 90 km radius
+- Slider shows live-updating circle overlay on the map as the user drags
+- Display below the slider:
+  - Selected radius (e.g., "35 km radius")
+  - Approximate area coverage (km²)
+  - Estimated storage size (updates live as slider moves)
+  - Number of safe zones/shelters included in this radius
+  - Zoom/detail level
+
+Example:
+
+  Manali
+  Radius: 35 km
+  Area: ~3,850 km²
+  Storage: ~210 MB
+  Safe zones included: 12
+
+  [Download]
+
+The download must include: map tiles, routing graph data, and safe-zone/POI data for the selected radius — not just visual tiles.
+
+4. SAFE ZONES (CORE FEATURE)
+Safe zones must be visible in TWO places:
+a) Around the user's current live location (auto-detected, always shown when data is available)
+b) Within any downloaded region (shown on that region's map, browsable even without being physically there)
+
+Each safe zone shows:
+- Name and type (shelter / relief camp / hospital / police station / high ground)
+- Distance and estimated walking/driving time from current location
+- [Navigate here] — triggers offline turn-by-turn routing
+
+Safe zone data sources: prioritize official disaster-management/relief-camp datasets where available; fall back to hospitals, police stations, and elevation-based "high ground" inference from downloaded elevation data.
+
+5. OFFLINE ROUTING
+- Real turn-by-turn navigation computed from locally stored routing graph data (not just a static map)
+- Route the user toward the nearest reachable safe zone, or a manually chosen destination
+- Prefer routes that avoid known flood-prone roads/underpasses/low-lying areas where data exists
+- Voice guidance option (screen-free navigation while moving through water/debris)
+- If GPS drops, retain and display "last known route" and last position
+
+6. DOWNLOADS SCREEN
+Each downloaded region shows:
+
+  Manali
+  Himachal Pradesh
+  Radius: 35 km · 210 MB
+  Downloaded 20 Sep 2026
+  12 safe zones included
+
+  [Open] [Delete]
+
+Also show:
+- Storage used ("210 MB of 2.4 GB")
+- "Download another area" (opens search + slider flow)
+
+7. OFFLINE MODE
+- Auto-detect offline status, show unobtrusive "Offline" label, never break the UI
+- Downloaded maps, routing, and safe zones remain fully usable
+- GPS keeps working; saved/downloaded data stays accessible
+- Search works against downloaded data where possible
+- If searching an undownloaded area: "No offline map available for this area." → [Download when online]
+
+8. SOS / EMERGENCY FEATURES
+- One-tap SOS button, always accessible from bottom nav
+- Share live location via SMS to an emergency contact (works without data, using SMS not internet)
+- Offline-cached list of emergency numbers (national disaster helpline, local police, ambulance)
+- No account required for any core safety functionality
+
+9. SAVED LOCATIONS
+Users can save Home, College/Work, Hotel, Custom places — each shows name, coordinates, and offline-map status (and whether it falls within a downloaded radius).
+
+TECHNICAL REQUIREMENTS:
+- React + TypeScript, modern component architecture, responsive design
+- PWA support with service workers for offline app functionality
+- IndexedDB for map metadata, routing graphs, and safe-zone data storage
+- GPS/geolocation APIs, continuing to function offline where the platform allows
+- MapLibre GL JS (or equivalent) for rendering, using OpenStreetMap-compatible tiles
+- An offline-capable routing engine (e.g., a client-side router that consumes downloaded OSM extracts — isolate the specific library choice and note tradeoffs)
+- Battery-conscious design: minimize background GPS polling and rendering overhead
+
+Separate concerns cleanly:
+1. Map rendering
+2. Download manager (with the slider-based radius selection)
+3. Offline storage
+4. GPS/location service
+5. Search/geocoding
+6. Offline routing engine
+7. Safe-zone/POI data service
+8. SOS/emergency service
+9. Network/offline detection
+
+Suggested structure:
+
+/components
+  MapView
+  SearchBar
+  LocationButton
+  RadiusSlider
+  DownloadCard
+  SafeZoneMarker
+  SafeZonePanel
+  OfflineIndicator
+  SOSButton
+  BottomNavigation
+  StorageIndicator
+
+/services
+  mapService
+  downloadService
+  locationService
+  offlineService
+  searchService
+  routingService
+  safeZoneService
+  sosService
+
+/storage
+  indexedDB
+  offlineMaps
+  routingGraphs
+  safeZoneData
+
+/pages
+  Explore
+  Downloads
+  Saved
+
+UX DETAILS:
+- Loading, empty, download-progress, download-complete, and download-failed states
+- Offline state, location-permission state, no-map-available state
+- Low-storage warning before large downloads (since 90 km radius can be sizable)
+- Network interruption during download, with resume support
+- Clear, calm error messaging (avoid alarming language in UI copy — the situation itself is already stressful)
+
+DOWNLOAD PROGRESS:
+
+  Downloading Manali (35 km radius)
+  ████████████░░░ 78%
+  164 MB / 210 MB
+
+On completion:
+
+  ✓ Manali (35 km) is available offline
+  12 safe zones · routing ready
+
+  [Open Map]
+
+PERMISSIONS & PRIVACY:
+- Request location permission only when needed, with a clear explanation tied to safety
+- Location data stays on-device wherever possible
+- No account required for core offline/safety functionality
+- SMS-based SOS sharing should be opt-in and clearly explained
+
+PRODUCT CONSTRAINT:
+Do not auto-download "everything." Users choose a center point and radius (5–90 km via slider). Architect storage so users can hold multiple downloaded regions up to their device's available space.
+
+RESPONSIVE DESIGN:
+- Mobile: full-screen map-first experience, bottom nav with SOS always visible
+- Desktop/tablet: large map with a slim side panel for search, downloads, saved places, and safe zones
+
+FINAL REQUIREMENT:
+No hardcoded/fake map images. Implement real architecture for: radius-based region selection, map + routing + safe-zone data download, local storage, offline display, offline turn-by-turn routing, GPS detection, network detection, and downloaded-region management.
+
+If any map/routing/POI data provider requires an API key, isolate it in an environment variable with clear setup instructions.
+
+Build order: (1) full UI and architecture, (2) map/offline/routing functionality, (3) safe-zone data integration, (4) test the complete flow: online → select radius → download → go offline → navigate to safe zone.

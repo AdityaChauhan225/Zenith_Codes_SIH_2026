@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Wayfinder"
+description = "An offline-first flood safety map that helps people prepare downloadable local maps, find safe zones, and navigate to safety even when internet access is unavailable."
+version = "1.0.0"
+id = "artifacts/wayfinder"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22558
+
+[services.development]
+run = "pnpm --filter @workspace/wayfinder run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/wayfinder", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/wayfinder/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22558"
+BASE_PATH = "/"
