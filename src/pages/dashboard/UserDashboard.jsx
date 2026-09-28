@@ -17,6 +17,25 @@ const UserHome = () => {
   });
   const [isLocating, setIsLocating] = useState(true);
   const [sosStatus, setSosStatus] = useState('idle');
+  const [aiPrediction, setAiPrediction] = useState(null);
+
+  const fetchLivePrediction = async (lat, lon) => {
+    try {
+      const res = await fetch('/api/predict/live', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat, lon })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setAiPrediction(data);
+        }
+      }
+    } catch (err) {
+      console.warn("Live ML hazard model offline or unavailable:", err);
+    }
+  };
 
   const handleSOS = () => {
     if (sosStatus !== 'idle') return;
@@ -141,16 +160,19 @@ const UserHome = () => {
           const lon = pos.coords.longitude;
           setLocation([lat, lon]);
           fetchWeather(lat, lon);
+          fetchLivePrediction(lat, lon);
           setIsLocating(false);
         },
         (err) => {
           console.error("Geolocation failed/denied, falling back to default.", err);
           fetchWeather(location[0], location[1]);
+          fetchLivePrediction(location[0], location[1]);
           setIsLocating(false);
         }
       );
     } else {
       fetchWeather(location[0], location[1]);
+      fetchLivePrediction(location[0], location[1]);
       setIsLocating(false);
     }
   }, []);
@@ -233,6 +255,35 @@ const UserHome = () => {
                    </div>
                 </div>
              </div>
+
+             {/* AI Prediction Model Card */}
+             {aiPrediction && (
+               <div className="p-4 mx-6 my-4 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 shadow-xs flex flex-col gap-2 shrink-0">
+                 <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-2">
+                     <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+                     <span className="text-xs font-bold uppercase tracking-wider text-[#0B1A2B]">XGBoost Flash Flood Model</span>
+                   </div>
+                   <span className={`text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full text-white shadow-xs ${
+                     aiPrediction.risk_level === 'critical' ? 'bg-red-600' :
+                     aiPrediction.risk_level === 'high' ? 'bg-orange-500' :
+                     aiPrediction.risk_level === 'medium' ? 'bg-yellow-500' : 'bg-emerald-600'
+                   }`}>
+                     {aiPrediction.risk_level} Risk ({Math.round(aiPrediction.risk_score * 100)}%)
+                   </span>
+                 </div>
+                 {aiPrediction.top_drivers && aiPrediction.top_drivers.length > 0 && (
+                   <div className="text-[11px] text-gray-600 flex flex-wrap items-center gap-1.5 mt-1">
+                     <span className="text-gray-400 font-semibold uppercase text-[10px]">SHAP Drivers:</span>
+                     {aiPrediction.top_drivers.slice(0, 3).map((d, idx) => (
+                       <span key={idx} className="bg-white/90 px-2 py-0.5 rounded-md border border-gray-200/80 text-[10px]">
+                         {d.feature.replace(/_/g, ' ')}: <strong className={d.direction === 'elevating' ? 'text-red-600' : 'text-emerald-700'}>{d.direction}</strong>
+                       </span>
+                     ))}
+                   </div>
+                 )}
+               </div>
+             )}
 
              <div className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
                  Disaster Telemetry Data

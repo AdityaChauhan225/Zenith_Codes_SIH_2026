@@ -76,40 +76,38 @@ def fetch_nearest_stream_distance(lat: float, lon: float, search_radius_m: int =
     min_distance = float("inf")
     last_err = None
 
-    for endpoint_url in OVERPASS_ENDPOINTS:
-        for attempt in range(2):
-            try:
-                req = urllib.request.Request(
-                    endpoint_url,
-                    data=data_encoded,
-                    headers={
-                        "User-Agent": "FlashFloodHydrologyPipeline/1.0",
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    }
-                )
-                with urllib.request.urlopen(req, timeout=10) as response:
-                    if response.status != 200:
-                        raise RuntimeError(f"Overpass API HTTP Error {response.status} at {endpoint_url}")
-                    payload = json.loads(response.read().decode("utf-8"))
-                    elements = payload.get("elements", [])
-                    
-                    for elem in elements:
-                        geom = elem.get("geometry", [])
-                        if len(geom) < 2:
-                            continue
-                        for i in range(len(geom) - 1):
-                            p1 = geom[i]
-                            p2 = geom[i+1]
-                            dist = dist_to_segment_m(lat, lon, p1["lat"], p1["lon"], p2["lat"], p2["lon"])
-                            if dist < min_distance:
-                                min_distance = dist
-                    last_err = None
-                    break  # Successful query
-            except Exception as err:
-                last_err = err
-                time.sleep(1)
+    for endpoint_url in OVERPASS_ENDPOINTS[:2]:
+        try:
+            req = urllib.request.Request(
+                endpoint_url,
+                data=data_encoded,
+                headers={
+                    "User-Agent": "FlashFloodHydrologyPipeline/1.0",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=2.5) as response:
+                if response.status != 200:
+                    raise RuntimeError(f"Overpass API HTTP Error {response.status} at {endpoint_url}")
+                payload = json.loads(response.read().decode("utf-8"))
+                elements = payload.get("elements", [])
+                
+                for elem in elements:
+                    geom = elem.get("geometry", [])
+                    if len(geom) < 2:
+                        continue
+                    for i in range(len(geom) - 1):
+                        p1 = geom[i]
+                        p2 = geom[i+1]
+                        dist = dist_to_segment_m(lat, lon, p1["lat"], p1["lon"], p2["lat"], p2["lon"])
+                        if dist < min_distance:
+                            min_distance = dist
+                last_err = None
+                break  # Successful query
+        except Exception as err:
+            last_err = err
 
-        if last_err is None:
+        if min_distance != float("inf"):
             break
 
     if min_distance == float("inf"):

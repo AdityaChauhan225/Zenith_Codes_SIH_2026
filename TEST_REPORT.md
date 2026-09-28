@@ -1,6 +1,6 @@
 # BACHAV — System Verification Test Report
 
-> **Generated**: 2026-09-29 00:20:38 IST  
+> **Generated**: 2026-09-29 01:09:21 IST  
 > **Execution Result**: **FAIL 0** | **PASS 30** | **WARN 0** | **SKIP 0**  
 > **Platform**: Windows x64 | Node v22+ | Python 3.14  
 
@@ -57,7 +57,7 @@
 | **DAT-01** | Setup & Data | Dataset contains exactly 6,000 rows | **`PASS`** | rows=6000 |
 | **DAT-02** | Setup & Data | All 12 hydrological features present in dataset | **`PASS`** |  |
 | **DAT-03** | Setup & Data | Rainfall non-decreasing constraint (1h <= 3h <= 6h <= 24h) | **`PASS`** |  |
-| **DAT-04** | Setup & Data | Categorical values strictly match valid domains | **`PASS`** | LC: {'agriculture', 'forest', 'barren', 'urban'}, AMC: {'normal', 'wet', 'dry'} |
+| **DAT-04** | Setup & Data | Categorical values strictly match valid domains | **`PASS`** | LC: {'agriculture', 'urban', 'barren', 'forest'}, AMC: {'normal', 'dry', 'wet'} |
 | **DAT-05** | Setup & Data | Temporal split (4500 train / 1500 test) & critical class ratio ≈ 3.5% | **`PASS`** | Train=4500, Test=1500, Critical=3.55% |
 | **PHY-01** | Physics & ML | SCS-CN Runoff maths correct (dry < normal < wet, Q=0 below Ia) | **`PASS`** | dry=0.00, norm=1.40, wet=11.71, zero=0.0 |
 | **MOD-01** | Physics & ML | Existing pipeline contract suite passed (test_pipeline.py - 7 tests) | **`PASS`** |  |
@@ -71,7 +71,7 @@
 | **MOD-09** | Physics & ML | Model metrics exceed targets (Acc >= 85%, Macro F1 >= 0.78, Crit F1 >= 0.78, Kappa >= 0.70) | **`PASS`** | Acc=89.4%, F1=0.8127, Crit=0.8333, Kappa=0.7503 |
 | **MOD-10** | Physics & ML | External geospatial and weather REST APIs reachable | **`PASS`** | Reachable: 1/3 |
 | **BAK-01** | Backend (Port 5000) | /api/health operational and /api/shelters returns 6 sorted nearest-first | **`PASS`** |  |
-| **BAK-02** | Backend (Port 5000) | POST /api/sos successfully creates alert and returns ID | **`PASS`** | id=sos_1790621433649_96ja8 |
+| **BAK-02** | Backend (Port 5000) | POST /api/sos successfully creates alert and returns ID | **`PASS`** | id=sos_1790624355754_9fa9c |
 | **BAK-03** | Backend (Port 5000) | Duplicate SOS within 3s deduplicated; 10 rapid clicks create only 1 record | **`PASS`** |  |
 | **BAK-04** | Backend (Port 5000) | Same SOS coordinates accepted again after 3s window expires | **`PASS`** |  |
 | **BAK-05** | Backend (Port 5000) | PATCH /api/sos/:id/resolve sets RESOLVED and unknown ID returns 404 | **`PASS`** |  |
