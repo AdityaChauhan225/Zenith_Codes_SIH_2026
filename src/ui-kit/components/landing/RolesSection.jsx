@@ -18,7 +18,7 @@ export function RolesSection({
   trustHeading = "Built with security and privacy first.",
 }) {
   return (
-    <section id="roles" className="w-full bg-[#EFF3F6] text-[#0B1A2B] py-24 pl-6 md:pl-12 pr-0 overflow-hidden">
+    <section id="roles" className="w-full bg-[#EFF3F6] text-[#0B1A2B] py-16 md:py-24 pl-6 md:pl-12 pr-0 overflow-hidden">
       <div className="flex justify-between items-center text-sm font-bold mb-12 uppercase tracking-wide pr-6 md:pr-12">
         <span>{sectionIndex} &mdash; Who It's For</span>
       </div>
@@ -28,11 +28,11 @@ export function RolesSection({
       </h2>
 
       {/* HORIZONTAL SCROLL CARDS */}
-      <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar pr-6 md:pr-12">
+      <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar pr-6 md:pr-12" style={{ WebkitOverflowScrolling: "touch" }}>
         {cards.map((card, idx) => (
           <div
             key={idx}
-            className="min-w-[300px] md:min-w-[400px] bg-[#0B1A2B] text-white p-8 snap-center flex flex-col justify-between aspect-square md:aspect-[4/3] group cursor-pointer hover:bg-gray-900 transition-colors relative overflow-hidden"
+            className="min-w-[300px] md:min-w-[420px] bg-[#0B1A2B] text-white p-8 md:p-10 snap-center flex flex-col justify-between h-full min-h-[400px] md:min-h-[480px] group cursor-pointer hover:bg-gray-900 transition-colors relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-30 group-hover:text-[#145C8C] transition-all">
               {card.icon}

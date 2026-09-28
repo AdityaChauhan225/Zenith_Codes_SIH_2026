@@ -43,28 +43,26 @@ export function HeroSection({
 
       {/* MASSIVE BACKGROUND TEXT */}
       <div className="absolute left-0 right-0 top-[40vh] flex items-center justify-center pointer-events-none z-[1]">
-        <h1 className="text-[22vw] font-bold tracking-tighter text-white/50 select-none w-full text-center">{appName}</h1>
+        <h1 className="text-[22vw] font-bold tracking-tighter text-white/50 select-none w-full text-center hidden md:block">{appName}</h1>
       </div>
 
       {/* TOP ROW — Navbar */}
       <div className="relative z-10 flex justify-between items-center w-full">
         {/* Mobile Logo */}
         <div className="lg:hidden flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 h-[40px] rounded-full shadow-md border border-gray-200">
-          <div className="grid grid-cols-2 gap-[2px]">
-            {[...Array(4)].map((_, i) => <div key={i} className="h-1.5 w-1.5 rounded-full bg-black" />)}
-          </div>
-          <span className="font-bold text-xs text-[#0B1A2B]">{appName}®</span>
+          <span className="font-extrabold text-[10px] tracking-[0.2em] text-[#0B1A2B] uppercase mt-0.5">
+            {appName}<span className="text-[#145C8C] text-xs leading-none">.</span>
+          </span>
         </div>
 
         <div className="w-[180px] hidden lg:block" />
 
         {/* Desktop Pill Navbar */}
         <nav className="hidden lg:flex items-center gap-6 bg-white/90 backdrop-blur-md px-6 h-[50px] rounded-full shadow-md border border-gray-200">
-          <div className="flex items-center gap-2">
-            <div className="grid grid-cols-2 gap-0.5">
-              {[...Array(4)].map((_, i) => <div key={i} className="h-1.5 w-1.5 rounded-full bg-black" />)}
-            </div>
-            <span className="font-bold text-sm text-[#0B1A2B]">{appName}®</span>
+          <div className="flex items-center gap-2 mr-4">
+            <span className="font-extrabold text-xs tracking-[0.2em] text-[#0B1A2B] uppercase mt-0.5">
+              {appName}<span className="text-[#145C8C] text-base leading-none">.</span>
+            </span>
           </div>
           {navLinks.map((link) => (
             <button
@@ -77,7 +75,7 @@ export function HeroSection({
           ))}
           {SignInComponent && (
             <SignInComponent defaultTab="signup">
-              <button className="bg-[#145C8C] text-white px-4 py-2 rounded-full text-xs font-bold hover:brightness-110 transition-all flex items-center gap-1 cursor-pointer">
+              <button className="bg-[#145C8C] text-black px-4 py-2 rounded-full text-xs font-bold hover:brightness-95 transition-all flex items-center gap-1 cursor-pointer">
                 Get Started <ArrowRight size={13} />
               </button>
             </SignInComponent>
@@ -100,7 +98,7 @@ export function HeroSection({
         {/* INFO CARD */}
         <motion.div
           layout
-          className={`bg-[#1B7A8C] text-white p-6 flex flex-col shadow-lg lg:self-start lg:-mt-[8px] mb-8 lg:mb-0 overflow-hidden relative ${
+          className={`bg-[#145C8C] p-6 flex flex-col shadow-lg lg:self-start lg:-mt-[8px] mb-8 lg:mb-0 overflow-hidden relative ${
             isExpanded ? "w-full lg:w-[480px] h-auto min-h-[450px] rounded-3xl z-50" : "w-full lg:w-[280px] min-h-[280px] lg:h-[380px] justify-between"
           }`}
           style={{ borderRadius: isExpanded ? 24 : 16 }}
@@ -109,11 +107,13 @@ export function HeroSection({
             {!isExpanded ? (
               <motion.div key="collapsed" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.2 } }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="flex flex-col h-full justify-between">
                 <div>
-                  <h2 className="font-bold text-lg mb-6 text-white">{appName}®</h2>
-                  <p className="font-medium text-[15px] leading-snug mb-4 text-white/90">{description}</p>
+                  <h2 className="font-extrabold text-lg tracking-[0.2em] uppercase mb-6 text-black">
+                    {appName}<span className="text-[#145C8C] text-xl leading-none">.</span>
+                  </h2>
+                  <p className="font-medium text-[15px] leading-snug mb-4">{description}</p>
                 </div>
                 {details.length > 0 && (
-                  <button onClick={() => setIsExpanded(true)} className="flex items-center gap-2 text-sm font-bold uppercase hover:opacity-70 transition-opacity cursor-pointer text-white">
+                  <button onClick={() => setIsExpanded(true)} className="flex items-center gap-2 text-sm font-bold uppercase hover:opacity-70 transition-opacity cursor-pointer">
                     Details <ArrowRight size={16} />
                   </button>
                 )}
@@ -121,14 +121,14 @@ export function HeroSection({
             ) : (
               <motion.div key="expanded" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.2 } }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="flex flex-col h-full">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="font-bold text-2xl tracking-tight text-white">Platform Details</h2>
+                  <h2 className="font-bold text-2xl tracking-tight">Platform Details</h2>
                   <button onClick={() => setIsExpanded(false)} className="hover:bg-black/10 p-2 rounded-full transition-colors cursor-pointer"><X size={20} /></button>
                 </div>
                 <div className="space-y-6 flex-1 mt-2">
                   {details.map((d, i) => (
                     <div key={i} className="flex gap-4">
-                      <div className="bg-white/15 p-3 rounded-xl h-fit text-white">{d.icon}</div>
-                      <div><h4 className="font-bold mb-1 text-white">{d.title}</h4><p className="text-sm font-medium text-white/70">{d.desc}</p></div>
+                      <div className="bg-black/10 p-3 rounded-xl h-fit">{d.icon}</div>
+                      <div><h4 className="font-bold mb-1">{d.title}</h4><p className="text-sm font-medium text-black/70">{d.desc}</p></div>
                     </div>
                   ))}
                 </div>
@@ -150,7 +150,7 @@ export function HeroSection({
               className="flex items-center gap-4 lg:gap-5 bg-[#0B1A2B] text-white pl-6 lg:pl-8 pr-2.5 lg:pr-3.5 py-3 lg:py-4 rounded-full border border-white/20 shadow-[0_0_45px_25px_#0B1A2B] hover:border-[#145C8C] hover:scale-[1.02] transition-all cursor-pointer group"
             >
               <span className="font-bold text-sm lg:text-lg tracking-tight">{ctaLabel}</span>
-              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-white text-[#0B1A2B] flex items-center justify-center group-hover:bg-[#1B7A8C] group-hover:text-white transition-colors">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-white text-black flex items-center justify-center group-hover:bg-[#145C8C] transition-colors">
                 <ArrowRight size={20} />
               </div>
             </button>

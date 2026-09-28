@@ -100,7 +100,13 @@ export function SignInDrawer({
               </button>
             )}
             <span className="flex-1 select-none text-center">
-              {step === "default" ? `${appName}®` : "Authenticating"}
+              {step === "default" ? (
+                <span className="font-extrabold tracking-[0.2em] uppercase">
+                  {appName}<span className="text-[#145C8C] leading-none">.</span>
+                </span>
+              ) : (
+                "Authenticating"
+              )}
             </span>
             {step === "passkey" && <div className="w-8" />}
           </div>

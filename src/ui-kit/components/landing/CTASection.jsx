@@ -29,11 +29,11 @@ export function CTASection({
   SignInComponent = null,
 }) {
   return (
-    <section id="apply" className="relative w-full bg-[#0B1A2B] text-white min-h-screen flex flex-col justify-between py-24 px-6 md:px-12 overflow-hidden">
+    <section id="apply" className="relative w-full bg-[#0B1A2B] text-white min-h-[100dvh] flex flex-col justify-between py-16 md:py-24 px-6 md:px-12 overflow-hidden">
 
       {/* BACKGROUND TEXT */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <h1 className="text-[30vw] font-bold tracking-tighter text-white/5 select-none">{bgText}</h1>
+      <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none z-0 overflow-hidden">
+        <h1 className="text-[18vw] md:text-[18vw] leading-none font-black tracking-tighter text-white/5 select-none whitespace-nowrap transform scale-y-[1.6] hidden md:block">{bgText}</h1>
       </div>
 
       <div className="relative z-10 flex justify-between items-center text-sm font-bold mb-24 uppercase tracking-wide">
@@ -73,13 +73,17 @@ export function CTASection({
           )}
           {footerTagline && (
             <div className="flex flex-col gap-4 max-w-[250px]">
-              <h4 className="font-bold text-gray-500 uppercase">{appName}®</h4>
+              <h4 className="font-extrabold tracking-[0.2em] text-gray-500 uppercase">
+                {appName}<span className="text-[#145C8C] leading-none">.</span>
+              </h4>
               <p className="text-gray-400">{footerTagline}</p>
             </div>
           )}
         </div>
         <div className="text-right">
-          <p className="text-3xl font-bold tracking-tighter mb-2">{appName}®</p>
+          <p className="font-extrabold tracking-[0.2em] uppercase text-xl text-white mb-2">
+            {appName}<span className="text-[#145C8C] text-2xl leading-none">.</span>
+          </p>
           <p className="text-sm text-gray-500">{copyright}</p>
         </div>
       </footer>

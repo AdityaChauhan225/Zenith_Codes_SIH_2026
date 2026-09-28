@@ -23,14 +23,14 @@ export function ProcessSection({
   solutionDesc = "Everything in one connected platform.",
 }) {
   return (
-    <section id="how-it-works" className="w-full bg-[#EFF3F6] text-[#0B1A2B] py-24 px-6 md:px-12 flex flex-col md:flex-row justify-between">
+    <section id="how-it-works" className="w-full bg-[#EFF3F6] text-[#0B1A2B] py-16 md:py-24 px-6 md:px-12 flex flex-col md:flex-row justify-between">
 
       {/* LEFT — big text */}
-      <div className="w-full md:w-1/2 mb-12 md:mb-0">
+      <div className="w-full md:w-1/2 mb-12 md:mb-0 md:sticky md:top-32 self-start">
         <div className="flex items-center text-sm font-bold mb-12 uppercase tracking-wide">
           <span>{sectionIndex} &mdash; How it works</span>
         </div>
-        <h2 className="text-[90px] md:text-[160px] leading-[0.8] font-bold tracking-tighter">
+        <h2 className="text-[18vw] sm:text-[90px] md:text-[160px] leading-[0.8] font-bold tracking-tighter max-w-full break-words">
           {bigText.map((line, i) => (
             <React.Fragment key={i}>{line}{i < bigText.length - 1 && <br />}</React.Fragment>
           ))}
