@@ -7,7 +7,7 @@
  * The hero uses a static gradient fallback instead of a video — the user
  * plans to add a map-based visualization in a future iteration.
  */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   HeroSection,
@@ -143,6 +143,13 @@ const footerLinks = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [isChromium, setIsChromium] = useState(false);
+
+  useEffect(() => {
+    // Detect Chromium-based browsers (Chrome, Edge, Brave, etc.)
+    const isChrome = !!window.chrome;
+    setIsChromium(isChrome);
+  }, []);
 
   const handleAuth = async (email) => {
     await new Promise((r) => setTimeout(r, 1500));
@@ -166,9 +173,10 @@ export default function LandingPage() {
   );
 
   return (
-    <>
+    <div style={isChromium ? { zoom: 0.9 } : {}}>
       {/* ── HERO ── */}
       <HeroSection
+        isChromium={isChromium}
         appName="BACHAV"
         tagline={["Village-Level.", "Flash Flood.", "Early Warning."]}
         description="Hyper-local flash flood prediction for hilly regions. Integrates rainfall, soil moisture, slope stability, and real-time IoT data to provide village-level early warnings with actionable lead time."
@@ -241,6 +249,6 @@ export default function LandingPage() {
         copyright={`\u00a9 ${new Date().getFullYear()} BACHAV. All rights reserved.`}
         SignInComponent={AuthDrawerWrapper}
       />
-    </>
+    </div>
   );
 }

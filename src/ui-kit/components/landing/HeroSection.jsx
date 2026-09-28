@@ -28,11 +28,12 @@ export function HeroSection({
   ctaSectionId = "how-it-works",
   details = [],
   SignInComponent = null,
+  isChromium = false,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <section className="relative min-h-screen w-full bg-[#EFF3F6] text-[#0B1A2B] flex flex-col justify-between pt-10 pb-12 px-6 md:px-12">
+    <section className={`relative w-full bg-[#EFF3F6] text-[#0B1A2B] flex flex-col justify-between pt-10 pb-12 px-6 md:px-12 ${isChromium ? 'min-h-[111.111vh]' : 'min-h-screen'}`}>
 
       {/* AMBIENT BACKGROUND VIDEO */}
       <div className="absolute inset-3 md:inset-4 pointer-events-none z-0 overflow-hidden rounded-[40px]">
