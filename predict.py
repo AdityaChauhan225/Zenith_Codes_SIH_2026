@@ -99,14 +99,28 @@ def validate_features(features: dict) -> pd.DataFrame:
     if amc not in valid_amc:
         raise ValueError(f"Invalid antecedent_moisture_condition '{amc}'. Must be one of {valid_amc}")
 
+    # Validate physical ranges and monotonicity
+    r1 = float(features["rainfall_1h_mm"])
+    r3 = float(features["rainfall_3h_mm"])
+    r6 = float(features["rainfall_6h_mm"])
+    r24 = float(features["rainfall_24h_mm"])
+    if r1 < 0 or r3 < 0 or r6 < 0 or r24 < 0:
+        raise ValueError("Rainfall accumulation cannot be negative")
+    if r3 < r1 or r6 < r3 or r24 < r6:
+        raise ValueError(f"Rainfall accumulation must be monotonically non-decreasing (1h <= 3h <= 6h <= 24h). Got 1h={r1}, 3h={r3}, 6h={r6}, 24h={r24}")
+
+    slope = float(features["slope_degrees"])
+    if slope < 0.0 or slope >= 90.0:
+        raise ValueError(f"slope_degrees must be between 0.0 and <90.0 degrees, got {slope}")
+
     # Construct single-row DataFrame with strict column order
     row = {
-        "rainfall_1h_mm": float(features["rainfall_1h_mm"]),
-        "rainfall_3h_mm": float(features["rainfall_3h_mm"]),
-        "rainfall_6h_mm": float(features["rainfall_6h_mm"]),
-        "rainfall_24h_mm": float(features["rainfall_24h_mm"]),
+        "rainfall_1h_mm": r1,
+        "rainfall_3h_mm": r3,
+        "rainfall_6h_mm": r6,
+        "rainfall_24h_mm": r24,
         "soil_saturation_index": float(np.clip(features["soil_saturation_index"], 0.0, 1.0)),
-        "slope_degrees": float(features["slope_degrees"]),
+        "slope_degrees": slope,
         "elevation_m": float(features["elevation_m"]),
         "aspect": float(features["aspect"]),
         "historical_incident_density": float(features["historical_incident_density"]),
