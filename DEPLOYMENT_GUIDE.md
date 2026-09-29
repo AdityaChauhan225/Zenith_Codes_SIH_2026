@@ -68,8 +68,9 @@ Render natively supports Python web services out of the box with `pip install -r
 4. Render will automatically detect [`render.yaml`](./render.yaml) and configure the unified Python service:
    - **Service Name**: `bachav-backend`
    - **Runtime**: `Python 3.11+`
+   - **Branch**: `main`
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn api_server:app --host 0.0.0.0 --port $PORT`
+   - **Start Command**: `python -m uvicorn api_server:app --host 0.0.0.0 --port $PORT`
    - **Plan**: `Free`
 5. Click **"Apply"**. Render will deploy your service and give you a live URL (e.g. `https://bachav-backend.onrender.com`).
 
@@ -84,10 +85,10 @@ If you prefer configuring manually without Blueprint:
    | :--- | :--- |
    | **Name** | `bachav-backend` |
    | **Region** | `Singapore` or `Frankfurt` (choose nearest to India) |
-   | **Branch** | `main` |
+   | **Branch** | **`main`** *(Make sure this is set to `main`, not default feature branch)* |
    | **Runtime** | `Python` |
    | **Build Command** | `pip install -r requirements.txt` |
-   | **Start Command** | `uvicorn api_server:app --host 0.0.0.0 --port $PORT` |
+   | **Start Command** | `python -m uvicorn api_server:app --host 0.0.0.0 --port $PORT` |
    | **Instance Type** | `Free` |
 4. Click **"Create Web Service"**.
 5. Your service will build and go live at `https://bachav-backend.onrender.com`.
