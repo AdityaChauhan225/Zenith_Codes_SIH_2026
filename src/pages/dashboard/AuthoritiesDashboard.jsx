@@ -82,7 +82,66 @@ const AuthoritiesHome = () => {
       .catch(err => console.warn('Live predict failed in AuthoritiesHub', err));
   }, [location]);
 
-  const handleAction = (id, action) => {
+  // Live polling for real-time Citizen SOS signals from /api/sos
+  useEffect(() => {
+    const fetchLiveSOS = async () => {
+      try {
+        const res = await fetch('/api/sos');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.alerts && Array.isArray(data.alerts)) {
+            const liveBackend = data.alerts.map(a => {
+              const isResolved = (a.status || '').toLowerCase() === 'resolved';
+              return {
+                id: a.id,
+                type: isResolved ? 'RESOLVED' : 'SOS ACTIVE',
+                typeColor: isResolved ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100',
+                borderColor: isResolved ? 'border-l-transparent' : 'border-l-red-500',
+                title: a.title || "Emergency Flash Flood SOS",
+                location: a.location || (a.latitude ? `Sector Lat: ${Number(a.latitude).toFixed(3)}, Lon: ${Number(a.longitude).toFixed(3)}` : "Chamoli River Zone"),
+                time: a.receivedAt ? new Date(a.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now",
+                trapped: a.trapped || "1-2 persons",
+                battery: a.battery || "91%",
+                waterLevel: a.waterLevel || "~1.3m (Rapid)",
+                message: a.info || "Trapped citizen distress beacon received.",
+                status: isResolved ? 'resolved' : (a.status || 'active').toLowerCase(),
+                latitude: a.latitude,
+                longitude: a.longitude,
+                expanded: false
+              };
+            });
+
+            // Combine backend alerts with template alerts cleanly
+            const seen = new Set();
+            const combined = [];
+            for (const item of [...liveBackend, ...initialAlerts]) {
+              if (!seen.has(item.id)) {
+                seen.add(item.id);
+                combined.push(item);
+              }
+            }
+            setAlerts(combined);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not poll /api/sos:", err);
+      }
+    };
+
+    fetchLiveSOS();
+    const timer = setInterval(fetchLiveSOS, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleAction = async (id, action) => {
+    if (action === 'resolve') {
+      try {
+        await fetch(`/api/sos/${id}/resolve`, { method: 'PATCH' });
+      } catch (err) {
+        console.warn("Resolve backend call failed:", err);
+      }
+    }
+
     setAlerts(alerts.map(a => {
       if (a.id === id) {
         if (action === 'dispatch') return { ...a, status: 'dispatched', type: 'DISPATCHED', typeColor: 'bg-[#145C8C] text-white', borderColor: 'border-l-[#145C8C]' };
@@ -96,10 +155,16 @@ const AuthoritiesHome = () => {
     setAlerts(alerts.map(a => a.id === id ? { ...a, expanded: !a.expanded } : { ...a, expanded: false }));
   };
 
-  // Generate some realistic offsets for the tactical markers based on live location
+  // Generate dynamic tactical map markers (including live active citizen SOS pins)
   const tacticalMarkers = [
+    ...alerts.filter(a => a.status === 'active' && a.latitude && a.longitude).slice(0, 5).map(a => ({
+      position: [Number(a.latitude), Number(a.longitude)],
+      type: 'sos',
+      label: a.id ? a.id.slice(0, 10) : 'LIVE SOS',
+      popup: `${a.title} (${a.location || 'Active Incident'})`
+    })),
     { position: [location[0] + 0.003, location[1] - 0.004], type: 'sos', label: 'SOS #4092-B', popup: 'Trapped in Flooded House' },
-    { position: [location[0] - 0.002, location[1] + 0.006], type: 'ndrf', label: 'NDRF Boat 1', popup: 'En route to SOS #4092-B' },
+    { position: [location[0] - 0.002, location[1] + 0.006], type: 'ndrf', label: 'NDRF Boat 1', popup: 'En route to active alert' },
     { position: location, type: 'ndrf', label: 'HQ Center', popup: 'Command Center' }
   ];
 
