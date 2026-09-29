@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { User, Bell, X, Camera } from 'lucide-react';
+import { User, Bell, X, Camera, LogOut } from 'lucide-react';
 
 export function DashboardLayout({ title = "BACHAV", links = [], profile }) {
   const navigate = useNavigate();
@@ -166,13 +166,18 @@ export function DashboardLayout({ title = "BACHAV", links = [], profile }) {
 
               </div>
               
-              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
-                 <button onClick={() => setShowProfile(false)} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors">
-                    Cancel
+              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-between items-center">
+                 <button onClick={() => navigate('/')} className="px-4 py-2 text-sm font-bold text-red-600 hover:text-red-700 transition-colors flex items-center gap-2">
+                    <LogOut size={16} /> Logout
                  </button>
-                 <button onClick={() => setShowProfile(false)} className="px-4 py-2 bg-[#145C8C] hover:bg-[#104e78] text-white text-sm font-medium rounded-lg shadow-sm transition-colors">
-                    Save Changes
-                 </button>
+                 <div className="flex gap-3">
+                   <button onClick={() => setShowProfile(false)} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors">
+                      Cancel
+                   </button>
+                   <button onClick={() => setShowProfile(false)} className="px-4 py-2 bg-[#145C8C] hover:bg-[#104e78] text-white text-sm font-medium rounded-lg shadow-sm transition-colors">
+                      Save Changes
+                   </button>
+                 </div>
               </div>
 
            </div>

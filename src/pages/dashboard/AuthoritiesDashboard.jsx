@@ -203,7 +203,7 @@ const AuthoritiesHome = () => {
 export default function AuthoritiesDashboard() {
   const profile = { name: "District Collector", role: "Chamoli HQ" };
   const links = [
-    { label: "Emergency Hub", path: "/dashboard/authorities/home" },
+    { label: "Emergency Hub", path: "/authorities/home" },
   ];
 
   return (

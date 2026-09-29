@@ -936,9 +936,9 @@ const UserHelp = () => {
 export default function UserDashboard() {
   const profile = { name: "Citizen User", role: "Resident" };
   const links = [
-    { label: "Home", path: "/dashboard/user/home" },
-    { label: "Map", path: "/dashboard/user/map" },
-    { label: "Help", path: "/dashboard/user/help" },
+    { label: "Home", path: "/users/home" },
+    { label: "Map", path: "/users/map" },
+    { label: "Help", path: "/users/help" },
   ];
 
   return (

@@ -151,13 +151,20 @@ export default function LandingPage() {
     setIsChromium(isChrome);
   }, []);
 
-  const handleAuth = async (email) => {
+  const handleAuth = async (email, password) => {
+    if (!email || !password) {
+      return { success: false, message: "Please enter both email and password." };
+    }
+    if (password.length < 6) {
+      return { success: false, message: "Password must be at least 6 characters." };
+    }
+
     await new Promise((r) => setTimeout(r, 1500));
     const isOfficial = email.includes("@gov.in") || email.includes("official") || email.includes("ndrf") || email.includes("admin");
     if (isOfficial) {
-      navigate("/dashboard/authorities/home");
+      navigate("/authorities/home");
     } else {
-      navigate("/dashboard/user/home");
+      navigate("/users/home");
     }
     return { success: true };
   };
@@ -167,8 +174,8 @@ export default function LandingPage() {
       {...props}
       appName="BACHAV"
       roles={[]}
-      onLogin={(email) => handleAuth(email)}
-      onSignup={(_, email) => handleAuth(email)}
+      onLogin={(email, password) => handleAuth(email, password)}
+      onSignup={(name, email, password) => handleAuth(email, password)}
     />
   );
 

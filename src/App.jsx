@@ -15,8 +15,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/dashboard/user/*" element={<UserDashboard />} />
-      <Route path="/dashboard/authorities/*" element={<AuthoritiesDashboard />} />
+      <Route path="/users/*" element={<UserDashboard />} />
+      <Route path="/authorities/*" element={<AuthoritiesDashboard />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
