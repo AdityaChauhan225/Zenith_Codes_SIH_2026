@@ -147,6 +147,36 @@ export function SignInDrawer({
                               <AlertCircle className="size-4 shrink-0" /> {error}
                             </div>
                           )}
+
+                          {/* Quick Demo Selector for Presentation */}
+                          <div className="p-2 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
+                            <span className="block text-[10px] text-white/50 uppercase font-bold tracking-wider px-1">Quick Demo Login:</span>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => { setEmail("citizen@bachav.in"); setPassword("citizen123"); }}
+                                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
+                                  email === "citizen@bachav.in"
+                                    ? "bg-[#145C8C] text-white shadow-sm"
+                                    : "bg-white/10 text-white/80 hover:bg-white/20"
+                                }`}
+                              >
+                                Citizen User
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { setEmail("ndrf@gov.in"); setPassword("ndrf123"); }}
+                                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
+                                  email === "ndrf@gov.in"
+                                    ? "bg-red-600 text-white shadow-sm"
+                                    : "bg-white/10 text-white/80 hover:bg-white/20"
+                                }`}
+                              >
+                                NDRF / Authorities
+                              </button>
+                            </div>
+                          </div>
+
                           <input type="email" placeholder="Email Address" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} />
                           <input type="password" placeholder="Password" className={inputClass} value={password} onChange={(e) => setPassword(e.target.value)} />
                           {roles.length > 0 && (

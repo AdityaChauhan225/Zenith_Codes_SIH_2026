@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/dashboard/DashboardLayout';
-import { ArrowUpRight, CloudLightning, CloudRain, CloudSun, Sun, Cloud, AlertTriangle, Info, Wind, Droplets, Search, MapPin, Download, Database, Trash2, Phone, User, ShieldAlert, Radio, BookOpen, AlertCircle, PhoneCall, Plus, X } from 'lucide-react';
+import { ArrowUpRight, CloudLightning, CloudRain, CloudSun, Sun, Cloud, AlertTriangle, Info, Wind, Droplets, Search, MapPin, Download, Database, Trash2, Phone, User, ShieldAlert, Radio, BookOpen, AlertCircle, PhoneCall, Plus, X, Brain } from 'lucide-react';
 import { InteractiveMap } from '../../components/dashboard/InteractiveMap';
+import { MLModelVisualizer } from '../../components/dashboard/MLModelVisualizer';
 
 const UserHome = () => {
   const [location, setLocation] = useState([30.3165, 78.0322]); // Default Dehradun
@@ -18,6 +19,7 @@ const UserHome = () => {
   const [isLocating, setIsLocating] = useState(true);
   const [sosStatus, setSosStatus] = useState('idle');
   const [aiPrediction, setAiPrediction] = useState(null);
+  const [showMLModal, setShowMLModal] = useState(false);
 
   const fetchLivePrediction = async (lat, lon) => {
     try {
@@ -257,33 +259,42 @@ const UserHome = () => {
              </div>
 
              {/* AI Prediction Model Card */}
-             {aiPrediction && (
-               <div className="p-4 mx-6 my-4 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 shadow-xs flex flex-col gap-2 shrink-0">
-                 <div className="flex items-center justify-between">
-                   <div className="flex items-center gap-2">
-                     <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
-                     <span className="text-xs font-bold uppercase tracking-wider text-[#0B1A2B]">XGBoost Flash Flood Model</span>
-                   </div>
-                   <span className={`text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full text-white shadow-xs ${
-                     aiPrediction.risk_level === 'critical' ? 'bg-red-600' :
-                     aiPrediction.risk_level === 'high' ? 'bg-orange-500' :
-                     aiPrediction.risk_level === 'medium' ? 'bg-yellow-500' : 'bg-emerald-600'
-                   }`}>
-                     {aiPrediction.risk_level} Risk ({Math.round(aiPrediction.risk_score * 100)}%)
-                   </span>
+             <div className="p-4 mx-6 my-4 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 shadow-xs flex flex-col gap-2 shrink-0">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-2">
+                   <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+                   <span className="text-xs font-bold uppercase tracking-wider text-[#0B1A2B]">XGBoost Flash Flood Model</span>
                  </div>
-                 {aiPrediction.top_drivers && aiPrediction.top_drivers.length > 0 && (
-                   <div className="text-[11px] text-gray-600 flex flex-wrap items-center gap-1.5 mt-1">
-                     <span className="text-gray-400 font-semibold uppercase text-[10px]">SHAP Drivers:</span>
-                     {aiPrediction.top_drivers.slice(0, 3).map((d, idx) => (
-                       <span key={idx} className="bg-white/90 px-2 py-0.5 rounded-md border border-gray-200/80 text-[10px]">
-                         {d.feature.replace(/_/g, ' ')}: <strong className={d.direction === 'elevating' ? 'text-red-600' : 'text-emerald-700'}>{d.direction}</strong>
-                       </span>
-                     ))}
-                   </div>
-                 )}
+                 <span className={`text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full text-white shadow-xs ${
+                   aiPrediction?.risk_level === 'critical' ? 'bg-red-600' :
+                   aiPrediction?.risk_level === 'high' ? 'bg-orange-500' :
+                   aiPrediction?.risk_level === 'medium' ? 'bg-yellow-500' : 'bg-emerald-600'
+                 }`}>
+                   {aiPrediction ? `${aiPrediction.risk_level} Risk (${Math.round(aiPrediction.risk_score * 100)}%)` : "Predicting Risk..."}
+                 </span>
                </div>
-             )}
+               {aiPrediction?.top_drivers && aiPrediction.top_drivers.length > 0 && (
+                 <div className="text-[11px] text-gray-600 flex flex-wrap items-center gap-1.5 mt-1">
+                   <span className="text-gray-400 font-semibold uppercase text-[10px]">SHAP Drivers:</span>
+                   {aiPrediction.top_drivers.slice(0, 3).map((d, idx) => (
+                     <span key={idx} className="bg-white/90 px-2 py-0.5 rounded-md border border-gray-200/80 text-[10px]">
+                       {d.feature.replace(/_/g, ' ')}: <strong className={d.direction === 'elevating' ? 'text-red-600' : 'text-emerald-700'}>{d.direction}</strong>
+                     </span>
+                   ))}
+                 </div>
+               )}
+               <div className="pt-2 border-t border-blue-200/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                 <span className="text-[10px] text-gray-500 font-medium">TreeSHAP Explainability & 6h GRU Nowcasting</span>
+                 <button
+                   type="button"
+                   onClick={() => setShowMLModal(true)}
+                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#145C8C] hover:bg-[#0B1A2B] text-white text-[11px] font-bold shadow-xs transition-colors cursor-pointer"
+                 >
+                   <Brain size={13} />
+                   Inspect SHAP Physics & Simulator &rarr;
+                 </button>
+               </div>
+             </div>
 
              <div className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
                  Disaster Telemetry Data
@@ -378,6 +389,14 @@ const UserHome = () => {
           ))}
        </div>
     </div>
+
+    {/* ML Model & SHAP Visualizer Modal */}
+    <MLModelVisualizer
+      isOpen={showMLModal}
+      onClose={() => setShowMLModal(false)}
+      currentPrediction={aiPrediction}
+      coordinates={location}
+    />
 
     </div>
   );
@@ -929,7 +948,7 @@ const UserHelp = () => {
         </div>
       )}
 
-    </div>
+     </div>
   );
 };
 

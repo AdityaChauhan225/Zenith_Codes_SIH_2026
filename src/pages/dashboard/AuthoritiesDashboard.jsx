@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/dashboard/DashboardLayout';
 import { InteractiveMap } from '../../components/dashboard/InteractiveMap';
+import { Brain } from 'lucide-react';
+import { MLModelVisualizer } from '../../components/dashboard/MLModelVisualizer';
 
 const initialAlerts = [
   {
@@ -66,6 +68,19 @@ const AuthoritiesHome = () => {
   }, []);
 
   const [alerts, setAlerts] = useState(initialAlerts);
+  const [showMLModal, setShowMLModal] = useState(false);
+  const [livePrediction, setLivePrediction] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/predict/live', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat: location[0], lon: location[1] })
+    })
+      .then(res => res.json())
+      .then(data => { if (data.success) setLivePrediction(data); })
+      .catch(err => console.warn('Live predict failed in AuthoritiesHub', err));
+  }, [location]);
 
   const handleAction = (id, action) => {
     setAlerts(alerts.map(a => {
@@ -99,7 +114,15 @@ const AuthoritiesHome = () => {
           <h3 className="text-2xl font-semibold text-[#0B1A2B] mb-2">Emergency Hub</h3>
           <p className="text-gray-500 text-xs">Manage active SOS signals and coordinate rescues.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+           <button
+             type="button"
+             onClick={() => setShowMLModal(true)}
+             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#145C8C] hover:bg-[#0B1A2B] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+           >
+             <Brain size={14} />
+             Inspect SHAP & Physics
+           </button>
            <span className="text-red-600 text-xs font-bold flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
               {alerts.filter(a => a.status === 'active').length} Critical
@@ -195,6 +218,14 @@ const AuthoritiesHome = () => {
 
       </div>
     </div>
+
+    {/* ML Model & SHAP Visualizer Modal */}
+    <MLModelVisualizer
+      isOpen={showMLModal}
+      onClose={() => setShowMLModal(false)}
+      currentPrediction={livePrediction}
+      coordinates={location}
+    />
 
   </div>
   );

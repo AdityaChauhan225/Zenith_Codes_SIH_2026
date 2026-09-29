@@ -450,7 +450,15 @@ async def predict_flash_flood_live(request: Request):
     try:
         # Ingest 12 features from live APIs & local caches
         features = assemble_features_from_coords(lat_f, lon_f, timestamp)
-        
+        source = "live"
+    except Exception as ingest_exc:
+        # Fallback: derive features from coordinates alone using geographic heuristics
+        # This ensures the endpoint always returns a prediction, even when external
+        # APIs are rate-limited or unreachable.
+        features = _fallback_features_from_coords(lat_f, lon_f)
+        source = "fallback"
+
+    try:
         # Run prediction
         result = predict_risk(features)
 
@@ -460,7 +468,7 @@ async def predict_flash_flood_live(request: Request):
             reverse=True
         )
 
-        return {
+        payload = {
             "success": True,
             "coordinates": {"latitude": lat_f, "longitude": lon_f},
             "features": features,
@@ -471,13 +479,72 @@ async def predict_flash_flood_live(request: Request):
                 {"feature": k, "impact": v, "direction": "elevating" if v > 0 else "suppressing"}
                 for k, v in sorted_drivers[:5]
             ],
-            "probabilities": result.get("probabilities", {})
+            "probabilities": result.get("probabilities", {}),
+            "source": source,
         }
+        if source == "fallback":
+            payload["note"] = "Live ingestion unavailable; prediction uses geographic fallback features."
+        return payload
     except Exception as exc:
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"success": False, "error": f"Live prediction failed: {str(exc)}"}
+            content={"success": False, "error": f"Prediction failed: {str(exc)}"}
         )
+
+
+def _fallback_features_from_coords(lat: float, lon: float) -> dict:
+    """
+    Derives a conservative 12-feature payload from coordinates alone.
+    Used when external APIs are unavailable. Features are based on:
+      - Elevation from latitude (Himalayan slope: higher lat → higher elevation)
+      - Slope from elevation gradient
+      - Land cover from latitude band
+      - AMC from longitude (monsoon moisture proxy)
+      - Other features set to moderate/conservative values
+    """
+    import numpy as _np
+
+    # Heuristic elevation: Himalayan foothills ~300-2000m based on latitude
+    elevation = float(_np.clip(300 + (lat - 28.0) * 150, 300, 3500))
+    slope = float(_np.clip(10 + (elevation - 300) / 200, 5, 65))
+
+    # Land cover: urban near city centers, forest at higher altitudes
+    if abs(lat - 30.3) < 0.5 and abs(lon - 78.0) < 0.5:
+        land_cover = "urban"
+    elif elevation > 2000:
+        land_cover = "barren"
+    elif elevation > 1200:
+        land_cover = "forest"
+    else:
+        land_cover = "agriculture"
+
+    # AMC: wetter in monsoon months (Jun-Sep)
+    from datetime import datetime
+    try:
+        month = datetime.now().month
+    except Exception:
+        month = 7
+    if month in (6, 7, 8, 9):
+        amc = "wet"
+    elif month in (10, 11):
+        amc = "normal"
+    else:
+        amc = "dry"
+
+    return {
+        "rainfall_1h_mm": 5.0,
+        "rainfall_3h_mm": 12.0,
+        "rainfall_6h_mm": 22.0,
+        "rainfall_24h_mm": 35.0,
+        "soil_saturation_index": 0.45,
+        "slope_degrees": slope,
+        "elevation_m": elevation,
+        "aspect": float(((lon + 90) % 360)),
+        "historical_incident_density": 0.5 + abs(lat - 30.0) * 0.3,
+        "land_cover_class": land_cover,
+        "distance_to_nearest_stream_m": 300.0,
+        "antecedent_moisture_condition": amc,
+    }
 
 @fastapi_app.post("/api/nowcast")
 async def nowcast_precipitation(request: Request):

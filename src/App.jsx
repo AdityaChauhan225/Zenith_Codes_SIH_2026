@@ -17,6 +17,9 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/users/*" element={<UserDashboard />} />
       <Route path="/authorities/*" element={<AuthoritiesDashboard />} />
+      {/* Backward-compatible aliases */}
+      <Route path="/dashboard/user/*" element={<Navigate to="/users/home" replace />} />
+      <Route path="/dashboard/authorities/*" element={<Navigate to="/authorities/home" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
